@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Adire Threads | African Fashion E-commerce</title>
+
+    <!-- TailwindCSS and Lucide Icons -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Custom stylesheet -->
+    <link rel="stylesheet" href="style.css" />
+  </head>
+
+  <body class="min-h-screen bg-gray-50 text-gray-800">
+    <header class="header-bg sticky top-0 shadow-lg text-white">
+      <div
+        class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center"
+      >
+        <h1 class="text-3xl md:text-4xl font-extrabold flex items-center">
+          <span class="mr-3 text-4xl">🪡</span> Adire Threads
+        </h1>
+
+        <!-- Cart -->
+        <div class="relative">
+          <button
+            id="cart-button"
+            class="bg-blue-600 hover:bg-blue-500 p-3 rounded-xl transition duration-150 relative shadow focus:outline-none focus:ring-4 focus:ring-blue-300"
+          >
+            <i data-lucide="shopping-cart" class="w-6 h-6"></i>
+            <span
+              id="cart-count"
+              class="absolute -top-1 -right-1 bg-red-600 text-xs font-bold w-5 h-5 flex items-center justify-center rounded-full border-2 border-white"
+              >0</span
+            >
+          </button>
+
+          <div
+            id="cart-modal"
+            class="hidden absolute right-0 mt-3 w-80 bg-white rounded-xl shadow-2xl p-4 text-gray-800 z-30 transition duration-300 transform scale-95 opacity-0 origin-top-right"
+          >
+            <h3
+              class="text-xl font-bold mb-4 border-b pb-2 flex justify-between items-center"
+            >
+              Your Cart
+              <button
+                onclick="closeCartModal()"
+                class="text-gray-400 hover:text-gray-600 p-1 rounded-full hover:bg-gray-100"
+              >
+                <i data-lucide="x" class="w-5 h-5"></i>
+              </button>
+            </h3>
+            <div
+              id="cart-items-list"
+              class="space-y-3 max-h-60 overflow-y-auto"
+            >
+              <p class="text-gray-500 text-center py-4">
+                Your cart is empty.
+              </p>
+            </div>
+            <div class="mt-4 pt-4 border-t">
+              <p class="text-xl font-bold flex justify-between mb-3">
+                Total: <span id="cart-total" class="text-accent">$0.00</span>
+              </p>
+              <button
+                id="checkout-button"
+                class="w-full bg-accent text-white py-3 rounded-xl font-semibold hover:bg-green-600 transition duration-150 shadow-md"
+              >
+                Secure Checkout
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-12">
+      <h2 class="text-4xl font-extrabold mb-4">
+        Authentic African Collection
+      </h2>
+      <p class="text-gray-600 mb-8 text-lg border-b pb-2">
+        Hand-dyed fabrics and modern designs. Experience the beauty of African
+        artistry and tradition.
+      </p>
+
+      <!-- Filters -->
+      <div
+        class="flex flex-col md:flex-row justify-between items-center bg-white p-4 rounded-xl shadow mb-8 space-y-4 md:space-y-0 md:space-x-4"
+      >
+        <div class="relative w-full md:w-1/2">
+          <i
+            data-lucide="search"
+            class="w-5 h-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2"
+          ></i>
+          <input
+            type="text"
+            id="search-input"
+            oninput="filterAndSortProducts()"
+            placeholder="Search by name or description..."
+            class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-blue-500 focus:border-blue-500 transition duration-150 shadow-sm"
+          />
+        </div>
+
+        <div class="flex items-center space-x-4 w-full md:w-auto">
+          <label
+            for="sort-select"
+            class="text-gray-700 font-semibold hidden sm:inline"
+            >Sort By:</label
+          >
+          <select
+            id="sort-select"
+            onchange="filterAndSortProducts()"
+            class="py-3 px-4 border border-gray-300 rounded-xl shadow-sm focus:ring-blue-500 focus:border-blue-500 transition duration-150"
+          >
+            <option value="default">Default Order</option>
+            <option value="price-asc">Price (Low to High)</option>
+            <option value="price-desc">Price (High to Low)</option>
+            <option value="name-asc">Name (A-Z)</option>
+          </select>
+        </div>
+      </div>
+
+      <div
+        id="products"
+        class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8"
+      ></div>
+
+      <div
+        id="no-results"
+        class="hidden text-center py-16 text-gray-600"
+      >
+        <i data-lucide="info" class="w-10 h-10 mx-auto mb-4 text-gray-400"></i>
+        <p class="text-xl font-semibold">
+          No products match your current search or filter criteria.
+        </p>
+      </div>
+    </main>
+
+    <!-- Checkout Modal -->
+    <div
+      id="checkout-modal"
+      class="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-50 transition-opacity duration-300 opacity-0 hidden"
+    >
+      <div class="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-lg">
+        <h3
+          class="text-2xl font-bold mb-6 border-b pb-2 flex justify-between items-center"
+        >
+          Finalize Secure Order
+          <button
+            onclick="closeCheckoutModal()"
+            class="text-gray-400 hover:text-gray-600 p-1 rounded-full hover:bg-gray-100"
+          >
+            <i data-lucide="x" class="w-6 h-6"></i>
+          </button>
+        </h3>
+
+        <div
+          id="checkout-summary"
+          class="bg-gray-100 p-4 rounded-lg mb-6 max-h-48 overflow-y-auto border border-gray-200"
+        ></div>
+
+        <p class="text-2xl font-extrabold mb-6 flex justify-between">
+          Grand Total: <span id="final-total" class="text-red-600">$0.00</span>
+        </p>
+
+        <form id="checkout-form" class="space-y-5">
+          <div>
+            <label
+              for="customer-name"
+              class="block text-sm font-semibold mb-1"
+              >Full Name</label
+            >
+            <input
+              type="text"
+              id="customer-name"
+              required
+              placeholder="John Doe"
+              class="mt-1 block w-full border border-gray-300 rounded-xl shadow-sm p-3 focus:ring-blue-500 focus:border-blue-500 transition duration-150"
+            />
+          </div>
+          <div>
+            <label
+              for="customer-email"
+              class="block text-sm font-semibold mb-1"
+              >Email</label
+            >
+            <input
+              type="email"
+              id="customer-email"
+              required
+              placeholder="name@example.com"
+              class="mt-1 block w-full border border-gray-300 rounded-xl shadow-sm p-3 focus:ring-blue-500 focus:border-blue-500 transition duration-150"
+            />
+          </div>
+
+          <button
+            type="submit"
+            id="submit-order-button"
+            class="w-full bg-red-600 text-white py-3 rounded-xl font-bold hover:bg-red-700 transition duration-150 shadow-lg flex items-center justify-center"
+          >
+            <span id="submit-text">Submit Order Securely</span>
+            <i
+              id="loading-spinner"
+              data-lucide="loader"
+              class="w-5 h-5 ml-2 animate-spin hidden"
+            ></i>
+          </button>
+        </form>
+
+        <div
+          id="order-message"
+          class="mt-6 p-4 rounded-xl text-center hidden font-semibold"
+        ></div>
+      </div>
+    </div>
+
+    <footer class="bg-gray-800 py-6 text-center text-gray-400">
+      <div class="max-w-7xl mx-auto px-4">
+        <p class="text-sm">
+          Serverless Portfolio Project | ©
+          <span id="year"></span> Gbemileke Oyeniran
+        </p>
+        <p class="text-xs mt-1">
+          Architecture by AWS Lambda, DynamoDB, and API Gateway
+        </p>
+      </div>
+    </footer>
+
+    <!-- External Script -->
+    <script src="script.js"></script>
+  </body>
+</html>
