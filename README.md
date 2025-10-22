@@ -1,6 +1,6 @@
 # 🪡 Adire Threads – Serverless African Fashion Store
 
-A **serverless e-commerce project** showcasing AWS skills by **Gbemileke Tobi Oyeniran**.  
+A **serverless e-commerce project** showcasing AWS skills by **Gbemileke Tobi Oyeniran & Abdul-azeez Ajobo**.  
 It features an African-themed clothing store built entirely on the **AWS Free Tier**.
 
 ---
@@ -53,8 +53,9 @@ User → CloudFront (HTTPS) → S3 (Frontend) → API Gateway → Lambda → Dyn
 
 ---
 
-## 👨🏽‍💻 Author
+## 👨🏽‍💻 Authors
 **Gbemileke Tobi Oyeniran**  
+**Abdul-Azeez Ajobo**  
 Cloud DevOps Engineer & Data Analyst  
 📧 oyeniranemmanuel@gmail.com  
 🔗 [LinkedIn](https://linkedin.com/in/gbemilekeoyeniran) | [GitHub](https://github.com/emmant96)
